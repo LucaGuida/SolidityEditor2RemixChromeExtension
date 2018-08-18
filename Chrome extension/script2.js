@@ -15,7 +15,7 @@ localStorage.clear();
 
 */
 
-
+// Clear local storage from 'Untitled' contracts
     Object.keys(localStorage)
     	.forEach(function (key) {
             if (!(/^sol:Untitled/.test(key))) {
@@ -23,7 +23,33 @@ localStorage.clear();
            	}
         });
 
-	localStorage.setItem('sol:library.sol', 'code');
+
+
+// NB > Assumption: to have the Chrome Extension import all the required contracts, in addition to the contract being edited, the Registry API should be ON
+
+try {
+	// Retrieve external contracts and libraries list from Registry API
+	var jsonObjFull;
+	var requestFull = new XMLHttpRequest();
+	requestFull.open('GET', 'http://localhost:3000/contracts', false); 
+	requestFull.send(null);
+	if (requestFull.status === 200) {
+		jsonObjFull = JSON.parse(requestFull.responseText);
+	}
+
+	var importsArray = ['Claimable', 'ConvertLib', 'Destructible']; // Lista da costruire dinamicamente andando a leggere gli import nel contratto principale, e ricorsivamente nei contratti derivati
+
+	if (typeof jsonObjFull != 'undefined') {
+		for(var i = 0; i < jsonObjFull.length; i++) 
+			for(var j = 0; j < importsArray.length; j++)
+				if (jsonObjFull[i]['JSON']['contract']['descriptor']['name'] == importsArray[j]) {
+					localStorage.setItem('sol:' + importsArray[j] + '.sol', jsonObjFull[i]['code']);
+				}
+	}
+}
+catch(err) {
+    console.log("Solidity smart contract registry API not available!");
+}
 
     document.getElementsByClassName("fa fa-plus-circle")[0].click();
     document.getElementsByClassName("modalFooterOk_3lIjRo")[0].click();
@@ -37,7 +63,3 @@ localStorage.clear();
 }
 
 goToActivityTab();
-
-
-
-
