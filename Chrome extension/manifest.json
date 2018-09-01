@@ -1,7 +1,7 @@
 {
 "manifest_version": 2,
-"name": "Solidity compiler",
-"description": "Solidity compiler",
+"name": "Ethereum Remix IDE",
+"description": "Ethereum Remix IDE",
 "version": "1.0",
 "permissions": ["tabs", "<all_urls>","activeTab","storage"],
 "browser_action": {

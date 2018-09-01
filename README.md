@@ -1,4 +1,4 @@
-# SolidityEditor2Remix
+# SolidityEditor2RemixChromeExtension
 
 
 ## Installation instructions
